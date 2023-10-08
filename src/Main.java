@@ -34,12 +34,23 @@ public class Main {
         int selectedNetwork = 0;
         selectedNetwork = input.nextInt();
 
-        System.out.println("");
+        System.out.println();
         System.out.println("You've selected network " + availableNetworks.get(selectedNetwork-1).getName());
         System.out.println("Now proceeding to scan it! Please wait...");
-        System.out.println("");
+        System.out.println();
 
-        Environment.scanNetwork(availableNetworks.get(selectedNetwork-1));
+        NetworkScanReport report = Environment
+                .scanNetwork(availableNetworks.get(selectedNetwork-1));
+
+        if (report.getOnlineDevices().length > 0){
+            System.out.println("Found the following devices online: "+report.getOnlineDevices().length);
+            for (Object obj : report.getOnlineDevices()) {
+                System.out.println(obj);
+            }
+        }
+
+        System.out.println("Task completed in : " + report.getTaskDuration() + " milliseconds");
+        System.out.println();
     }
 
 }

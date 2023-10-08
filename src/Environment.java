@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
@@ -29,11 +28,10 @@ public class Environment {
         return availableNetworks;
     }
 
-    public static void scanNetwork(NetworkInterface network){
-
+    public static NetworkScanReport scanNetwork(NetworkInterface network){
 
         List<NetworkDevice> possibleNetworkDevices = Environment
-                .getPossibleNetworkDeviceOnNetwork(network);
+                .getPossibleNetworkDevicesOnNetwork(network);
 
         long start = System.currentTimeMillis();
 
@@ -41,17 +39,10 @@ public class Environment {
 
         long end = System.currentTimeMillis();
 
-        if (onlineDevices.length > 0){
-            System.out.println("Found the following devices online: "+onlineDevices.length);
-            for (Object obj : onlineDevices) {
-                System.out.println(obj);
-            }
-        }
-        System.out.println("Elapsed: " + (end - start) + "milliseconds");
-        System.out.println();
+        return new NetworkScanReport(onlineDevices, (end - start) );
     }
 
-    private static List<NetworkDevice> getPossibleNetworkDeviceOnNetwork(NetworkInterface network){
+    private static List<NetworkDevice> getPossibleNetworkDevicesOnNetwork(NetworkInterface network){
         byte[] localHostIp = network.getInetAddresses().nextElement().getAddress();
         List<NetworkDevice> possibleNetworkDevices = new ArrayList<>();
         for (int i = 1; i < 255; i++) {
